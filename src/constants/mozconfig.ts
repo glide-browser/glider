@@ -3,7 +3,7 @@ import { getCurrentBrandName } from '../commands/package'
 import { getFFVersionOrCandidate } from '../utils'
 
 const otherBuildModes = `# You can change to other build modes by running:
-#   $ surfer set buildMode [dev|debug|release]`
+#   $ glider set buildMode [dev|debug|release]`
 
 export const internalMozconfg = (
   brand: string,
@@ -39,7 +39,7 @@ ac_add_options --enable-rust-simd`
   return (
     `
 # =====================
-# Internal surfer config
+# Internal glider config
 # =====================
 
 ${buildOptions}
@@ -56,7 +56,7 @@ export MOZ_APPUPDATE_HOST=${
       config.updateHostname || 'localhost:7648 # This should not resolve'
     }
 ` +
-    ((process as any).surferPlatform === 'darwin'
+    ((process as any).gliderPlatform === 'darwin'
       ? `
 
 # MacOS specific settings

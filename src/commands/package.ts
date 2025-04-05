@@ -22,12 +22,14 @@ const machPath = resolve(ENGINE_DIR, 'mach')
 async function getLocales() {
   // l10n/supported-languages is a list of locales divided by newlines
   // open the file and split it by newlines
-  const localesText = await readFile('l10n/supported-languages', 'utf-8')
+  const localesText = await readFile('l10n/supported-languages', 'utf-8').catch(
+    () => ''
+  )
   log.info(`Found locales:\n${localesText}`)
   return localesText.split('\n')
 }
 
-export const surferPackage = async () => {
+export const gliderPackage = async () => {
   const brandingKey = dynamicConfig.get('brand') as string
   const brandingDetails = config.brands[brandingKey]
 
@@ -60,7 +62,7 @@ export const surferPackage = async () => {
 
     const currentCWD = process.cwd()
 
-    if (!process.env.SURFER_SIGNING_MODE) {
+    if (!process.env.GLIDER_SIGNING_MODE) {
       await dispatch(machPath, arguments_, ENGINE_DIR, true)
 
       log.info('Copying language packs')
@@ -92,7 +94,7 @@ export const surferPackage = async () => {
 
     // Windows has some special dist files that are available within the dist
     // directory.
-    if ((process as any).surferPlatform == 'win32') {
+    if ((process as any).gliderPlatform == 'win32') {
       const installerDistributionDirectory = join(
         OBJ_DIR,
         'dist',
@@ -183,7 +185,7 @@ async function createMarFile(
   // <obj dir>/dist/${binaryName}/${brandFullName}.app and on everything else,
   // the contents of the folder <obj dir>/dist/${binaryName}
   const binary =
-    (process as any).surferPlatform == 'darwin'
+    (process as any).gliderPlatform == 'darwin'
       ? process.env.JUST_MAR
         ? join(OBJ_DIR, 'dist', `${getCurrentBrandName()}.app`)
         : join(
@@ -208,7 +210,7 @@ async function createMarFile(
       MAR_CHANNEL_ID: channel,
       MAR: process.env.MAR ? windowsPathToUnix(process.env.MAR) : marBinary,
     },
-    shell: process.env.SURFER_SIGNING_MODE ? 'unix' : 'default',
+    shell: process.env.GLIDER_SIGNING_MODE ? 'unix' : 'default',
   })
   return marPath
 }

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Surfer
+# Glider
 
 Build Firefox-based browsers with ease
 
@@ -11,7 +11,7 @@ Build Firefox-based browsers with ease
 ## Installation
 
 ```sh
-npm install @zen-browser/surfer
+npm install @glide-browser/glider
 ```
 
 ## Documentation
@@ -22,9 +22,11 @@ Documentation is available on [docs.gluon.dev](https://docs.gluon.dev) or in the
 
 The following is included in good faith. The writer is not a lawyer, and this is not legal advice.
 
-### Gluon and Melon
+### Surfer, Gluon, and Melon
 
-Surfer is a fork of [Gluon](https://github.com/pulse-browser/gluon) but the author has stoped working on it. Gluon has been extracted from melon, the build tool for the [desktop version of Dot Browser](https://github.com/dothq/browser-desktop) under MPL v2.0.
+Glider is a fork of [Surfer](https://github.com/zen-browser/surfer) so we can customise it more deeply for our use case. In the future, I hope all changes made here can also be upstreamed.
+
+Surfer itself is a fork of [Gluon](https://github.com/pulse-browser/gluon), which is no longer maintained. Gluon has been extracted from melon, the build tool for the [desktop version of Dot Browser](https://github.com/dothq/browser-desktop) under MPL v2.0.
 
 This Source Code Form is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this

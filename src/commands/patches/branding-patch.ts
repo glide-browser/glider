@@ -109,7 +109,7 @@ async function setupImages(configPath: string, outputPath: string) {
   })
 
   // TODO: Custom MacOS icon support
-  if ((process as any).surferPlatform == 'darwin') {
+  if ((process as any).gliderPlatform == 'darwin') {
     log.debug('Generating Mac Icons')
     log.debug(`Using MacOS icon: ${join(configPath, 'logo-mac.png')}`)
     log.debug(`Output path: ${outputPath}`)

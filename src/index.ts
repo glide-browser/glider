@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 function getPlatform() {
-  if (process.env.SURFER_PLATFORM) {
-    return process.env.SURFER_PLATFORM
+  if (process.env.GLIDER_PLATFORM) {
+    return process.env.GLIDER_PLATFORM
   }
   return process.platform
 }
 
-Object.defineProperty(process, 'surferPlatform', { value: getPlatform() })
+Object.defineProperty(process, 'gliderPlatform', { value: getPlatform() })
 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,7 @@ import { log } from './log'
 // We have to use a dynamic require here, otherwise the typescript compiler
 // mucks up the directory structure
 // eslint-disable-next-line @typescript-eslint/no-var-requires, unicorn/prefer-module
-const { version: surferVersion } = require('../package.json')
+const { version: gliderVersion } = require('../package.json')
 
 export const config = configInited
 
@@ -53,7 +53,7 @@ export const bin_name = BIN_NAME
 
 const programVersions = []
 
-export const compatMode = process.env.SURFER_COMPAT
+export const compatMode = process.env.GLIDER_COMPAT
 
 for (const brand in config.brands) {
   const brandConfig = config.brands[brand]
@@ -77,7 +77,7 @@ program
           reportedFFVersion ? `(being reported as ${reportedFFVersion})` : ''
         }`,
       },
-      { name: 'Surfer', value: surferVersion },
+      { name: 'Glider', value: gliderVersion },
       reportedFFVersion
         ? `Mismatch detected between expected Firefox version and the actual version.\nYou may have downloaded the source code using a different version and\nthen switched to another branch.`
         : '',
@@ -96,7 +96,7 @@ for (const command of commands) {
   if (
     command.flags &&
     command.flags.platforms &&
-    !command.flags.platforms.includes((process as any).surferPlatform)
+    !command.flags.platforms.includes((process as any).gliderPlatform)
   ) {
     continue
   }

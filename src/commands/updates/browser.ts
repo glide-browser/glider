@@ -49,17 +49,17 @@ export async function getPlatformConfig() {
 
 function getReleaseMarName(releaseInfo: ReleaseInfo): string | undefined {
   let releaseMarName
-  if ((process as any).surferPlatform == 'win32') {
+  if ((process as any).gliderPlatform == 'win32') {
     if (compatMode == 'x86_64') {
       releaseMarName = 'windows.mar'
     } else if (compatMode == 'aarch64') {
       releaseMarName = 'windows-arm64.mar'
     }
   }
-  if ((process as any).surferPlatform == 'darwin') {
+  if ((process as any).gliderPlatform == 'darwin') {
     releaseMarName = 'macos.mar' // universal binary
   }
-  if ((process as any).surferPlatform == 'linux') {
+  if ((process as any).gliderPlatform == 'linux') {
     if (compatMode == 'x86_64') {
       releaseMarName = 'linux.mar'
     } else if (compatMode == 'aarch64') {
@@ -122,19 +122,19 @@ async function writeUpdateFileToDisk(
 }
 
 function getTargets(): string[] {
-  if ((process as any).surferPlatform == 'win32') {
+  if ((process as any).gliderPlatform == 'win32') {
     return compatMode == 'aarch64'
       ? ausPlatformsMap.winArm
       : ausPlatformsMap.win64
   }
 
-  if ((process as any).surferPlatform == 'linux') {
+  if ((process as any).gliderPlatform == 'linux') {
     return compatMode == 'aarch64'
       ? ausPlatformsMap.linuxArm
       : ausPlatformsMap.linux64
   }
 
-  if ((process as any).surferPlatform == 'darwin') {
+  if ((process as any).gliderPlatform == 'darwin') {
     return [...ausPlatformsMap.macosArm, ...ausPlatformsMap.macosIntel]
   }
   log.error('Unknown platform')

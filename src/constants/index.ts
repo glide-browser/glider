@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { log } from '../log'
 
-export const BIN_NAME = 'surfer'
+export const BIN_NAME = 'glider'
 
 export const BUILD_TARGETS = ['linux', 'windows', 'macos']
 export const ARCHITECTURE = ['i686', 'x86_64']
@@ -30,7 +30,7 @@ export const PATCHES_DIR = resolve(
 )
 export const COMMON_DIR = resolve(process.cwd(), 'common')
 export const CONFIGS_DIR = resolve(process.cwd(), 'configs')
-export const MELON_DIR = resolve(process.cwd(), '.surfer')
+export const MELON_DIR = resolve(process.cwd(), '.glider')
 export const MELON_TMP_DIR = resolve(MELON_DIR, 'engine')
 export const DIST_DIR = resolve(process.cwd(), 'dist')
 
@@ -95,7 +95,7 @@ if (process.platform == 'win32') {
 
       BASH_PATH = execa.sync('where.exe bash.exe').stdout.toString()
       if (!BASH_PATH.includes('bash.exe')) {
-        BASH_PATH = process.env.SURFER_SIGNING_MODE
+        BASH_PATH = process.env.GLIDER_SIGNING_MODE
           ? 'C:\\mozilla-build\\msys2\\usr\\bin\\bash.exe'
           : ''
         if (BASH_PATH === '') {

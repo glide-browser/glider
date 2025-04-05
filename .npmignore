@@ -8,12 +8,12 @@ site/
 tests/
 
 .prettierrc.json
-surfer.json
+glider.json
 tsconfig.json
 yarn.lock
 .eslintignore
 .eslintrc.json
-.surfer
+.glider
 .vscode/
 .github/
 .eslintrc.js

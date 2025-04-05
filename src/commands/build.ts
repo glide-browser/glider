@@ -35,7 +35,7 @@ const applyConfig = async (os: string) => {
     changeset = stdout.trim()
   } catch (error) {
     log.warning(
-      'Surfer expects that you are building your browser with git as your version control'
+      'Glider expects that you are building your browser with git as your version control'
     )
     log.warning(
       'If you are using some other version control system, please migrate to git'
@@ -177,13 +177,13 @@ export const build = async (options: Options): Promise<void> => {
 
   // Host build
 
-  const prettyHost = platform[(process as any).surferPlatform]
+  const prettyHost = platform[(process as any).gliderPlatform]
 
   if (BUILD_TARGETS.includes(prettyHost)) {
     if (!options.skipPatchCheck) await patchCheck()
 
     await applyConfig(prettyHost)
-    if (process.env.SURFER_MOZCONFIG_ONLY) {
+    if (process.env.GLIDER_MOZCONFIG_ONLY) {
       log.info('Mozconfig applied. Exiting...')
       process.exit(0)
     }
