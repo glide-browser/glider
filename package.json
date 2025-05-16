@@ -34,7 +34,7 @@
   "dependencies": {
     "@resvg/resvg-js": "^1.4.0",
     "async-icns": "^1.0.2",
-    "axios": "^0.21.1",
+    "axios": "^0.30.0",
     "chalk": "^4.1.0",
     "cli-progress": "^3.9.1",
     "commander": "^6.2.1",
@@ -51,7 +51,7 @@
     "prompts": "^2.4.1",
     "rustic": "^1.2.1",
     "semver": "^7.3.7",
-    "sharp": "^0.30.7",
+    "sharp": "^0.32.6",
     "tiny-glob": "^0.2.9",
     "xmlbuilder2": "^3.0.2"
   },
