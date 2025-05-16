@@ -4,8 +4,8 @@
 import { existsSync } from 'node:fs'
 import { lstatSync, readFileSync } from 'node:fs'
 import { ensureSymlink, remove } from 'fs-extra'
-import { copyFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
+import fs, { copyFile, readlink } from 'node:fs/promises'
+import path, { dirname, resolve } from 'node:path'
 import glob from 'tiny-glob'
 
 import { appendToFileSync, ensureDirectory, mkdirp } from '../../utils'
@@ -50,11 +50,23 @@ export const copyManual = async (
         resolve(dest, ...getChunked(name))
       )
     } else {
-      // Create the symlink
-      await ensureSymlink(
-        resolve(placeToCheck, ...getChunked(name)),
-        resolve(dest, ...getChunked(name))
-      )
+      const srcPath = resolve(placeToCheck, ...getChunked(name))
+      const link = await readlink(srcPath).catch(() => null)
+
+      // handle relative symlinks
+      if (link !== null && (link.startsWith('./') || link.startsWith('../'))) {
+        const rel_to_dir = path.dirname(path.join(dest, name))
+        const linked_to = resolve(rel_to_dir, ...getChunked(link))
+        const output_path = resolve(dest, ...getChunked(name))
+        await fs.rm(output_path, { force: true })
+        await fs.symlink(linked_to, output_path)
+      } else {
+        // Create the symlink
+        await ensureSymlink(
+          resolve(placeToCheck, ...getChunked(name)),
+          resolve(dest, ...getChunked(name))
+        )
+      }
     }
   } catch (e) {
     console.info('name: ', name)
