@@ -83,10 +83,16 @@ export interface ICopyPatch extends IMelonPatch {
 // Exports
 
 export async function get(): Promise<ICopyPatch[]> {
-  const allFilesInSource = await glob('**/*', {
-    filesOnly: true,
-    cwd: SRC_DIR,
-  })
+  const allFilesInSource = (
+    await glob('**/*', {
+      filesOnly: true,
+      cwd: SRC_DIR,
+    })
+  )
+    // filter out glide/ files as those are handled separately in
+    // https://github.com/glide-browser/glide/blob/main/scripts/copy-src.mts
+    // TODO(glide): move this logic into `glider`
+    .filter((f) => !f.startsWith('glide/'))
   const files = allFilesInSource.filter(
     (f) => !(f.endsWith('.patch') || f.split('/').includes('node_modules'))
   )
