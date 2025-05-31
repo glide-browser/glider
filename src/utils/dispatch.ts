@@ -9,7 +9,7 @@ import { log } from '../log'
 export const removeTimestamp = (input: string): string =>
   input.replace(/\s\d{1,5}:\d\d\.\d\d /g, '')
 
-type CommandResult = { success: boolean; output: string[] }
+type CommandResult = { success: boolean; output: string[]; code: number | null }
 
 export const configDispatch = (
   cmd: string,
@@ -88,8 +88,20 @@ export const configDispatch = (
     proc.stderr?.on('error', (d) => handle(d, config?.killOnError || false))
 
     proc.on('exit', (code) => {
-      resolve({ success: code === 0, output })
+      resolve({ success: code === 0, output, code })
     })
+  })
+}
+
+export const run: typeof configDispatch = (cmd, args) => {
+  return new Promise((resolve, reject) => {
+    configDispatch(cmd, args).then((result) =>
+      result.success
+        ? resolve(result)
+        : reject(
+            `Command \`${cmd}\` exited with non-zero status code ${result.code}`
+          )
+    )
   })
 }
 
