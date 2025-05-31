@@ -137,6 +137,7 @@ export async function setupProject(): Promise<void> {
       binaryName,
       version: { product, version },
       buildOptions: {
+        useGitFetch: true,
         windowsUseSymbolicLinks: false,
       },
     }

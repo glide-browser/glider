@@ -55,15 +55,7 @@ export const init = async (directory: Command | string): Promise<void> => {
     cwd: absoluteInitDirectory,
   })
 
-  await configDispatch('git', {
-    args: ['config', 'commit.gpgsign', 'false'],
-    cwd: absoluteInitDirectory,
-  })
-
-  await configDispatch('git', {
-    args: ['config', 'core.safecrlf', 'false'],
-    cwd: absoluteInitDirectory,
-  })
+  await configureGitRepo(absoluteInitDirectory)
 
   log.info('Committing...')
 
@@ -77,5 +69,17 @@ export const init = async (directory: Command | string): Promise<void> => {
   await configDispatch('git', {
     args: ['checkout', '-b', config.name.toLowerCase().replace(/\s/g, '_')],
     cwd: absoluteInitDirectory,
+  })
+}
+
+export async function configureGitRepo(cwd: string) {
+  await configDispatch('git', {
+    args: ['config', 'commit.gpgsign', 'false'],
+    cwd,
+  })
+
+  await configDispatch('git', {
+    args: ['config', 'core.safecrlf', 'false'],
+    cwd,
   })
 }

@@ -82,6 +82,11 @@ export const commands: Cmd[] = [
         arg: '--force',
         description: 'Delete the engine directory if it already exists',
       },
+      {
+        arg: '--full-history',
+        description:
+          'Whether or not to perform a shallow clone, only applies if downloading with git',
+      },
     ],
     requestController: async () =>
       (await import('./commands/download')).download,

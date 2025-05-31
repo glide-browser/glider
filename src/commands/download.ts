@@ -4,13 +4,26 @@
 
 import { bin_name, config } from '..'
 import { log } from '../log'
-import { downloadInternals } from './download/firefox'
+import { downloadInternals, downloadWithGit } from './download/firefox'
 
 type Options = {
   force?: boolean
+  fullHistory?: boolean
 }
 
-export const download = async (options: Options): Promise<void> => {
+async function _download(options: Options): Promise<void> {
+  if (config.buildOptions.useGitFetch) {
+    if (!config.version.tag) {
+      log.error(
+        'You have not specified a `version.tag` in your config file which is required when downloading with git'
+      )
+      process.exit(1)
+    }
+
+    await downloadWithGit(config.version.tag, options)
+    return
+  }
+
   const version = config.version.version
 
   // If gFFVersion isn't specified, provide legible error
@@ -22,6 +35,11 @@ export const download = async (options: Options): Promise<void> => {
   }
 
   await downloadInternals({ version, force: options.force })
+}
+
+export const download = async (options: Options): Promise<void> => {
+  log.debug(options)
+  await _download(options)
 
   log.success(
     `You should be ready to make changes to ${config.name}.`,

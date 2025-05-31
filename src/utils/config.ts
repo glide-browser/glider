@@ -128,6 +128,10 @@ export interface Config {
      */
     product: SupportedProducts
     /**
+     * The git tag in the https://github.com/mozilla-firefox/firefox repository to checkout.
+     */
+    tag?: string
+    /**
      * The version of the selected product you are forking
      */
     version?: string
@@ -137,6 +141,7 @@ export interface Config {
     candidate?: string
   }
   buildOptions: {
+    useGitFetch: boolean
     windowsUseSymbolicLinks: boolean
   }
   addons: Record<string, AddonInfo>
@@ -164,6 +169,7 @@ export const defaultConfig: Config = {
     product: SupportedProducts.Firefox,
   },
   buildOptions: {
+    useGitFetch: true,
     windowsUseSymbolicLinks: false,
   },
   addons: {},
