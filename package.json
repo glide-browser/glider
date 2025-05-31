@@ -14,7 +14,7 @@
     "build:win": "tsc && copy /y .\\src\\commands\\license-check.txt .\\dist\\commands\\license-check.txt",
     "format": "prettier . -w",
     "lint": "eslint .",
-    "self": "cd testing && node ../dist/index.js"
+    "self": "npm run build && cd testing && node ../dist/index.js"
   },
   "repository": {
     "type": "git",
