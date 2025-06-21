@@ -267,7 +267,7 @@ export async function apply(name: string): Promise<void> {
   ensureEmpty(outputPath)
 
   await setupImages(configPath, outputPath)
-  await setupLocale(outputPath, {...brandingConfig, appId: config.appId})
+  await setupLocale(outputPath, { ...brandingConfig, appId: config.appId })
   await copyMozFiles(outputPath, brandingConfig)
   await addOptionalIcons(configPath, outputPath)
 
@@ -418,6 +418,11 @@ function configureProfileBranding(
 pref("startup.homepage_override_url", "https://glide-browser.app/whatsnew?v=%VERSION%");
 pref("startup.homepage_welcome_url", "https://glide-browser.app/welcome/");
 pref("startup.homepage_welcome_url.additional", "https://glide-browser.app/privacy-policy/");
+
+// The number of days a binary is permitted to be old
+// without checking for an update.  This assumes that
+// app.update.checkInstallTime is true.
+pref("app.update.checkInstallTime.days", 63);
 
 // Give the user x seconds to react before showing the big UI. default=192 hours
 pref("app.update.promptWaitTime", 691200);
