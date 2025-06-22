@@ -106,6 +106,12 @@ for (const command of commands) {
     .description(command.description)
     .aliases(command?.aliases || [])
 
+  // Disable help for run command to allow --help & others to pass through
+  if (command.cmd.startsWith('run')) {
+    buildCommand.helpOption(false)
+    buildCommand.allowUnknownOption(true)
+  }
+
   // Register all of the required options
   for (const opt of command?.options || []) {
     buildCommand =

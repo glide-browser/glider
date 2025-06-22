@@ -8,7 +8,9 @@ import { ENGINE_DIR } from '../constants'
 import { log } from '../log'
 import { config, dispatch } from '../utils'
 
-export const run = async (chrome?: string) => {
+export const run = async (...args: any[]) => {
+  const actualArgs = Array.isArray(args[0]) ? args[0] : args
+
   const directories = readdirSync(ENGINE_DIR)
   const objectDirname = directories.find((directory) =>
     directory.startsWith('obj-')
@@ -21,12 +23,7 @@ export const run = async (chrome?: string) => {
   const objectDirectory = resolve(ENGINE_DIR, objectDirname)
 
   if (existsSync(objectDirectory)) {
-    dispatch(
-      './mach',
-      ['run', ...(chrome ? ['-chrome', chrome] : [])],
-      ENGINE_DIR,
-      true
-    )
+    dispatch('./mach', ['run', ...actualArgs], ENGINE_DIR, true)
   } else {
     log.error(
       `Unable to locate any built binaries.\nRun |${bin_name} build| to initiate a build.`

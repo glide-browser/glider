@@ -155,7 +155,7 @@ export const commands: Cmd[] = [
     requestController: async () => (await import('./commands/reset')).reset,
   },
   {
-    cmd: 'run [chrome]',
+    cmd: 'run [args...]',
     aliases: ['r', 'open'],
     description: 'Run the browser.',
     requestController: async () => (await import('./commands/run')).run,
