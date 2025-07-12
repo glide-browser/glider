@@ -23,7 +23,7 @@ async function getLocales() {
   // l10n/supported-languages is a list of locales divided by newlines
   // open the file and split it by newlines
   const localesText = await readFile('l10n/supported-languages', 'utf-8').catch(
-    () => ''
+    () => 'en-US'
   )
   log.info(`Found locales:\n${localesText}`)
   return localesText.split('\n')
