@@ -162,7 +162,11 @@ export async function generateBrowserUpdateFiles() {
   // We need the sha512 hash of the mar file for the update file. AUS will use
   // this to ensure that the mar file has not been modified on the distribution
   // server
-  const marHash = generateHash(marPath, 'sha512')
+  const marHash = await generateHash(marPath, 'sha512').catch(() => null)
+  if (!marHash) {
+    log.warning(`No mar file has been built`)
+    return
+  }
 
   // We need platform information, primarily for the BuildID, but other stuff
   // might be helpful later
