@@ -47,33 +47,40 @@ export async function getPlatformConfig() {
   return parse(iniContents.toString())
 }
 
-function getReleaseMarName(releaseInfo: ReleaseInfo): string | undefined {
-  let releaseMarName
+function getReleaseMarName(releaseInfo: ReleaseInfo): string {
   if ((process as any).gliderPlatform == 'win32') {
     if (compatMode == 'x86_64') {
-      releaseMarName = 'windows.mar'
+      return 'windows.mar'
     } else if (compatMode == 'aarch64') {
-      releaseMarName = 'windows-arm64.mar'
+      return 'windows-arm64.mar'
     }
   }
   if ((process as any).gliderPlatform == 'darwin') {
-    releaseMarName = 'macos.mar' // universal binary
+    if (compatMode == 'x86_64') {
+      return 'macos-x86_64.mar'
+    } else if (compatMode == 'aarch64') {
+      return 'macos-aarch64.mar'
+    } else {
+      return 'macos.mar'
+    }
   }
   if ((process as any).gliderPlatform == 'linux') {
     if (compatMode == 'x86_64') {
-      releaseMarName = 'linux.mar'
+      return 'linux-x86_64.mar'
     } else if (compatMode == 'aarch64') {
-      releaseMarName = 'linux-aarch64.mar'
+      return 'linux-aarch64.mar'
+    } else {
+      return 'linux.mar'
     }
   }
-  return releaseMarName
+  return 'output.mar'
 }
 
 function getReleaseMarURL(releaseInfo: ReleaseInfo) {
   const releaseMarName = getReleaseMarName(releaseInfo)
-  let completeMarURL = `https://${config.updateHostname || 'localhost:8000'}/${
-    releaseMarName || 'output.mar'
-  }`
+  let completeMarURL = `https://${
+    config.updateHostname || 'localhost:8000'
+  }/${releaseMarName}`
 
   // The user is using github to distribute release binaries for this version.
   if (releaseInfo.github) {
