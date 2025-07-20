@@ -8,10 +8,12 @@ import { SRC_DIR } from '../constants'
 import { walkDirectory } from '../utils/fs'
 import { Task, TaskList } from '../utils/task-list'
 
-const ignoredFiles = new RegExp('.*\\.(json|patch|md|jpeg|png|gif|tiff|ico)')
+const ignoredFiles = new RegExp(
+  '.*\\.(json|patch|md|jpeg|png|gif|tiff|ico|woff2|DS_Store|gitignore)'
+)
 const licenseIgnore = new RegExp('(//|#) Ignore license in this file', 'g')
 const fixableFiles = [
-  { regex: new RegExp('.*\\.(j|t)s'), comment: '// ', commentClose: '\n' },
+  { regex: new RegExp('.*\\.(m?)(j|t)s'), comment: '// ', commentClose: '\n' },
   {
     regex: new RegExp('.*(\\.inc)?\\.css'),
     commentOpen: '/*\n',
@@ -25,8 +27,8 @@ const fixableFiles = [
     commentClose: '\n   -->',
   },
   {
-    regex: new RegExp('.*\\.py|moz\\.build|jar\\.mn'),
-    commentOpen: '#\n',
+    regex: new RegExp('.*\\.py|moz\\.build|jar\\.mn|\\.toml'),
+    commentOpen: '',
     comment: '# ',
     commentClose: '\n',
   },
@@ -56,7 +58,20 @@ export async function isValidLicense(path: string): Promise<boolean> {
 
 export function createTask(path: string, noFix: boolean): Task {
   return {
-    skip: () => ignoredFiles.test(path),
+    skip: () => {
+      if (ignoredFiles.test(path)) {
+        return true
+      }
+
+      const relPath = path.replace(SRC_DIR, '')
+      return (
+        // compiled files
+        relPath.startsWith('/glide/docs/dist') ||
+        relPath.startsWith('/glide/bundled') ||
+        // Mozilla does not appear to put licenses in these files
+        relPath.endsWith('chrome.manifest')
+      )
+    },
     name: path.replace(SRC_DIR, ''),
     task: async () => {
       const contents = await readFile(path, { encoding: 'utf8' })
@@ -89,7 +104,7 @@ export function createTask(path: string, noFix: boolean): Task {
         header = commentOpen + header + commentClose
       }
 
-      await writeFile(path, header + '\n' + contentsSplitNewline.join('\n'))
+      await writeFile(path, header + '\n\n' + contentsSplitNewline.join('\n'))
     },
   }
 }
