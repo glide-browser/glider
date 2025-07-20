@@ -69,6 +69,7 @@ export function createTask(path: string, noFix: boolean): Task {
         relPath.startsWith('/glide/docs/dist') ||
         relPath.startsWith('/glide/bundled') ||
         relPath.startsWith('/glide/generated/') ||
+        relPath.endsWith('api-bundled.d.ts') ||
         // Mozilla does not appear to put licenses in these files
         relPath.endsWith('chrome.manifest')
       )
