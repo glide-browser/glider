@@ -1,6 +1,6 @@
 {
   "name": "@glide-browser/glider",
-  "version": "1.12.6",
+  "version": "1.12.7",
   "description": "Simplifying building firefox forks!",
   "main": "index.js",
   "bin": {
