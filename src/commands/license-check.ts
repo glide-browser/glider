@@ -9,7 +9,7 @@ import { walkDirectory } from '../utils/fs'
 import { Task, TaskList } from '../utils/task-list'
 
 const ignoredFiles = new RegExp(
-  '.*\\.(json|patch|md|jpeg|png|gif|tiff|ico|woff2|DS_Store|gitignore)'
+  '.*\\.(json|patch|md|jpeg|png|gif|webp|tiff|ico|woff2|DS_Store|gitignore)'
 )
 const licenseIgnore = new RegExp('(//|#) Ignore license in this file', 'g')
 const fixableFiles = [
