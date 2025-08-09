@@ -15,10 +15,9 @@ import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { every } from 'modern-async'
 import { dirname, extname, join } from 'node:path'
 import sharp from 'sharp'
-import pngToIco from 'png-to-ico'
 import asyncIcns from 'async-icns'
 
-import { compatMode, config } from '../..'
+import { config } from '../..'
 import { CONFIGS_DIR, ENGINE_DIR, MELON_TMP_DIR } from '../../constants'
 import { log } from '../../log'
 import {
@@ -179,6 +178,7 @@ async function setupLocale(
 }
 
 async function copyMozFiles(
+  configPath: string,
   outputPath: string,
   brandingConfig: {
     backgroundColor: string
@@ -223,11 +223,6 @@ async function copyMozFiles(
     outputPath,
     brandingNsis[0].replace(BRANDING_FF, '')
   )
-  const configureProfileBrandingPath = join(
-    outputPath,
-    'pref',
-    'firefox-branding.js'
-  )
   log.debug('Configuring branding.nsi into ' + outputBrandingNsis)
   configureBrandingNsis(outputBrandingNsis, brandingConfig)
 
@@ -237,7 +232,10 @@ async function copyMozFiles(
     copyFileSync(file, join(outputPath, file.replace(BRANDING_FF, '')))
   }
 
-  configureProfileBranding(configureProfileBrandingPath, brandingConfig)
+  copyFileSync(
+    join(configPath, 'pref', 'firefox-branding.js'),
+    join(outputPath, 'pref', 'firefox-branding.js')
+  )
 }
 
 // =============================================================================
@@ -268,7 +266,7 @@ export async function apply(name: string): Promise<void> {
 
   await setupImages(configPath, outputPath)
   await setupLocale(outputPath, { ...brandingConfig, appId: config.appId })
-  await copyMozFiles(outputPath, brandingConfig)
+  await copyMozFiles(configPath, outputPath, brandingConfig)
   await addOptionalIcons(configPath, outputPath)
 
   setUpdateURLs()
@@ -379,13 +377,14 @@ function configureBrandingNsis(
 
 function addOptionalIcons(brandingPath: string, outputPath: string) {
   // move all icons in the top directory and inside "content/" into the branding directory
-  const icons = readdirSync(brandingPath)
+  const icons = readdirSync(brandingPath, { withFileTypes: true })
   const iconsContent = readdirSync(join(brandingPath, 'content'))
 
   for (const icon of icons) {
-    if (icon.includes('content')) continue
-    log.info(`Copying ${icon} to ${outputPath}`)
-    copyFileSync(join(brandingPath, icon), join(outputPath, icon))
+    if (icon.isDirectory()) continue
+    if (icon.name.includes('content')) continue
+    log.info(`Copying ${icon.name} to ${outputPath}`)
+    copyFileSync(join(brandingPath, icon.name), join(outputPath, icon.name))
   }
 
   for (const icon of iconsContent) {
@@ -395,53 +394,6 @@ function addOptionalIcons(brandingPath: string, outputPath: string) {
       join(outputPath, 'content', icon)
     )
   }
-}
-
-function configureProfileBranding(
-  brandingPath: string,
-  brandingConfig: {
-    backgroundColor: string
-    brandShorterName: string
-    brandShortName: string
-    brandFullName: string
-    brandingGenericName: string
-    brandingVendor: string
-  }
-) {
-  writeFileSync(
-    brandingPath,
-    `
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-pref("startup.homepage_override_url", "https://glide-browser.app/whatsnew?v=%VERSION%");
-pref("startup.homepage_welcome_url", "https://glide-browser.app/welcome/");
-pref("startup.homepage_welcome_url.additional", "https://glide-browser.app/privacy-policy/");
-
-// The number of days a binary is permitted to be old
-// without checking for an update.  This assumes that
-// app.update.checkInstallTime is true.
-pref("app.update.checkInstallTime.days", 63);
-
-// Give the user x seconds to react before showing the big UI. default=192 hours
-pref("app.update.promptWaitTime", 691200);
-// app.update.url.manual: URL user can browse to manually if for some reason
-// all update installation attempts fail.
-// app.update.url.details: a default value for the "More information about this
-// update" link supplied in the "An update is available" page of the update
-// wizard.
-pref("app.update.url.manual", "https://glide-browser.app/download/");
-pref("app.update.url.details", "https://glide-browser.app/release-notes/latest/");
-pref("app.releaseNotesURL", "https://glide-browser.app/whatsnew/");
-pref("app.releaseNotesURL.aboutDialog", "https://www.glide-browser.app/release-notes/%VERSION%/");
-pref("app.releaseNotesURL.prompt", "https://glide-browser.app/release-notes/%VERSION%/");
-
-// Number of usages of the web console.
-// If this is less than 5, then pasting code into the web console is disabled
-pref("devtools.selfxss.count", 5);
-`
-  )
 }
 
 function setUpdateURLs() {
