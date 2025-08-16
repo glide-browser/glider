@@ -11,7 +11,7 @@ import { Task, TaskList } from '../utils/task-list'
 const ignoredFiles = new RegExp(
   '.*\\.(json|patch|md|jpeg|png|gif|webp|tiff|ico|woff2|DS_Store|gitignore)'
 )
-const licenseIgnore = new RegExp('(//|#) Ignore license in this file', 'g')
+const LICENSE_IGNORE_STRING = 'license-ignore-file'
 const fixableFiles = [
   { regex: new RegExp('.*\\.(m?)(j|t)s'), comment: '// ', commentClose: '\n' },
   {
@@ -51,7 +51,7 @@ export async function isValidLicense(path: string): Promise<boolean> {
     (lines.includes('the Mozilla Public') &&
       lines.includes('If a copy of the MPL was') &&
       lines.includes('http://mozilla.org/MPL/2.0/')) ||
-    licenseIgnore.test(contents.join('\n'))
+    file.includes(LICENSE_IGNORE_STRING)
 
   return hasLicense
 }
