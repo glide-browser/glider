@@ -268,8 +268,6 @@ export async function apply(name: string): Promise<void> {
   await setupLocale(outputPath, { ...brandingConfig, appId: config.appId })
   await copyMozFiles(configPath, outputPath, brandingConfig)
   await addOptionalIcons(configPath, outputPath)
-
-  setUpdateURLs()
 }
 
 function configureBrandingNsis(
@@ -394,12 +392,4 @@ function addOptionalIcons(brandingPath: string, outputPath: string) {
       join(outputPath, 'content', icon)
     )
   }
-}
-
-function setUpdateURLs() {
-  const baseURL = `URL=https://@MOZ_APPUPDATE_HOST@/updates/browser/%BUILD_TARGET%/%CHANNEL%/update.xml`
-  const appIni = join(ENGINE_DIR, 'build', 'application.ini.in')
-  const appIniContents = readFileSync(appIni).toString()
-  const updatedAppIni = appIniContents.replace(/URL=.*update.xml/g, baseURL)
-  writeFileSync(appIni, updatedAppIni)
 }
